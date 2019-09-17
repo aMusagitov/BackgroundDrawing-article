@@ -30,15 +30,18 @@ let bytesPerPixel = 4
 let bytesPerRow = bytesPerPixel * width
 let rawData = malloc(height * bytesPerRow)
 let bitsPerComponent = 8
-guard let context = CGContext(data: rawData, width: width, height: height, bitsPerComponent: bitsPerComponent, bytesPerRow: bytesPerRow, space: colorSpace, bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue | CGImageByteOrderInfo.order32Big.rawValue) else { return }
+guard let context = CGContext(data: rawData, width: width, height: height, 
+                              bitsPerComponent: bitsPerComponent, bytesPerRow: bytesPerRow,
+                              space: colorSpace, 
+                              bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue | CGImageByteOrderInfo.order32Big.rawValue) else { return }
 ```
 
 Перед рендером слоя в контексте необходимо проверить, перевернут ли слой.
 [snippet](https://gitlab.com/snippets/1895576)
 ```swift
 if layer.contentsAreFlipped() {
-let flipVertical = CGAffineTransform(a: 1, b: 0, c: 0, d: -1, tx: 0, ty: layer.frame.size.height)
-context.concatenate(flipVertical)
+    let flipVertical = CGAffineTransform(a: 1, b: 0, c: 0, d: -1, tx: 0, ty: layer.frame.size.height)
+    context.concatenate(flipVertical)
 }
 ```
 Вызываем рендер слоя в контексте: *layer.render(in: context)* и создаем изображение: *guard let cgImage = context.makeImage()*
