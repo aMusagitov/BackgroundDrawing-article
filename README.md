@@ -21,7 +21,7 @@
 Попробовав вышеперечисленные методы выбор пал на первый вариант, так как он показал более быструю скорость выполнения.
 
 Моя настройка выглядит так:
-[gist](https://gitlab.com/snippets/1895570)
+[snippet](https://gitlab.com/snippets/1895570)
 ```swift
 let width = Int(layer.frame.size.width)
 let height = Int(layer.frame.size.height)
@@ -34,7 +34,7 @@ guard let context = CGContext(data: rawData, width: width, height: height, bitsP
 ```
 
 Перед рендером слоя в контексте необходимо проверить, перевернут ли слой.
-[gist](https://gitlab.com/snippets/1895576)
+[snippet](https://gitlab.com/snippets/1895576)
 ```swift
 if layer.contentsAreFlipped() {
 let flipVertical = CGAffineTransform(a: 1, b: 0, c: 0, d: -1, tx: 0, ty: layer.frame.size.height)
@@ -47,4 +47,4 @@ context.concatenate(flipVertical)
 
 Следующим действием было оборачивание всей работы с контекстом в autorelease {} блок. Казалось бы, что утечка пропала, но при одновременном рендере нескольких изображений в фоновом потоке main thread блокировался, и утечки появились вновь. В итоге было решено каждый рендер изображения обернуть в операцию и использовать operationQueue, autorelease блок был убран, main thread перестал блокироваться и утечки пропали.
 
-[Проект с примером](https://gitlab.com/aMusagitov/backgroundimagecomposer)
+[Тестовый проект](https://gitlab.com/aMusagitov/backgroundimagecomposer)
